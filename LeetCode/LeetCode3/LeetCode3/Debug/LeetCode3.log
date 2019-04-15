@@ -1,0 +1,4 @@
+﻿  main.cpp
+C:\C++_Code\Exercise\LeetCode\LeetCode3\LeetCode3\main.cpp(22): warning C4018: “<”: 有符号/无符号不匹配
+C:\C++_Code\Exercise\LeetCode\LeetCode3\LeetCode3\main.cpp(45): warning C4018: “<”: 有符号/无符号不匹配
+  LeetCode3.vcxproj -> C:\C++_Code\Exercise\LeetCode\LeetCode3\Debug\LeetCode3.exe
