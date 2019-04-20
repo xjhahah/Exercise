@@ -24,6 +24,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+
 using namespace std;
 
 class Solution {
@@ -64,3 +65,11 @@ public:
         return false;
     }
 };
+
+int main()
+{
+  Solution s;
+  vector<string> vs{"XOX", "O O", "XOX"};
+  cout << s.validTicTacToe(vs) << endl; 
+  return 0;
+}
