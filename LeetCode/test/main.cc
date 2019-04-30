@@ -87,7 +87,6 @@ int main() {
 
 }
 
-
 #include <iostream>
 #include <vector>
 
@@ -119,8 +118,9 @@ int main()
 	return 0;
 }
 
+#endif
 
-
+#if 0
 #include <iostream>
 #include <set>
 #include <math.h>
@@ -235,7 +235,7 @@ int main()
 	}
 	return 0;
 }
-#endif
+#endif 
 /*
 void Safelevel(string s)
 {
