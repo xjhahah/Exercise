@@ -18,6 +18,8 @@ int main(int argc, char* argv[]) {
 		perror("socket");
 		return 1;
 	}
+  int opt = 1;
+  setsockopt(fd, SOL_SOCKET, SO_LINGER,&opt,sizeof(opt));
 	struct sockaddr_in addr;
 	addr.sin_family = AF_INET;
 	addr.sin_addr.s_addr = inet_addr(argv[1]);
@@ -48,7 +50,7 @@ int main(int argc, char* argv[]) {
 		printf("[Request] %s", input_buf);
 		char buf[1024] = { 0 };
 		const char* hello = "<h1>hello world</h1>";
-		sprintf(buf, "HTTP/1.1 200 OK\nContent-Length:%lu\n\n%s", strlen(hello), hello);
+		sprintf(buf, "HTTP/1.1 403 OK\nContent-Length:%lu\n\n%s", strlen(hello), hello);
 		write(client_fd, buf, strlen(buf));
 	}
 	return 0;
