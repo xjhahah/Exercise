@@ -24,16 +24,9 @@ public:
 int main()
 {
 	Solution s;
-  vector<int> v1;
-  vector<int> v2;
+  vector<int> v1{1,2,2,1};
+  vector<int> v2{2,2};
   int n,m;
-  while(cin>>n)
-  {
-    v1.push_back(n);
-  }
-  while(cin>>m){
-    v2.push_back(m);
-  }
   vector<int> v=s.intersect(v1,v2);
   for(auto e : v)
   {
