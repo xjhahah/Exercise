@@ -12,7 +12,9 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include <algorithm>
 
+using namespace std;
 class Solution {
 public:
     void sortColors(vector<int>& nums) {
