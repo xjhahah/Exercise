@@ -1,77 +1,89 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <set>
-#include <algorithm>
-
-using std::set;
 using std::string;
 using std::vector;
 using std::cout;
 using std::endl;
 
-//单词替换
-//
-class Solution{
-  public:
-    string replaceWords(vector<string>& dict,string sentence){
-      string s;
-      set<int> rootSize; //词根长度集合
-      vector<string> words; //存储sentence以空格分割结果
-      //第一步，以空格进行切割
-      spilt(words,sentence,' ');
-      //第二步，将词根转换set容器，并计算词根长度
-      set<string> dictSet(dict.begin(),dict.end());
-      for(auto& word : dict){
-        rootSize.insert(word.size());
-      }
-      //第三步，开始搜索各个单词是否在词根
-      for(auto& word : words){
-        bool flag=false;
-        string str; //已找到的词根
-        //词根长度必须是长度集合中的元素，并且不大于word自身的长度
-        for(auto it = rootSize.begin(); it != rootSize.end() && *it < word.size(); ++it){
-          //获取word前*it个字符
-          str = word.substr(0,*it);
-          if(dictSet.find(str) != dictSet.end()){
-            flag=true;
-            break;
-          }
-        }
-        if(flag){
-          //如果是词根直接放入s
-          s += str + " ";
-        }
-        else{
-          //否则将单词直接放入
-          s += word + " ";
-        }
-      }
-      //去掉多余空格
-      if(s.size() > 0){
-        s.resize(s.size()-1);
-      }
-      return s;
+class Trie {
+public:
+    /** Initialize your data structure here. */
+    Trie() 
+        :root(new TrieNode())
+    {}
+    ~Trie()
+    {
+        if(root)
+            delete root;
     }
-    void spilt(vector<string>& words,string& sentence,char ch){
-      int size = sentence.size();
-      int index = 0;
-      while(index < size){
-        string str;
-        while(index < size && sentence[index] != ch){
-          str += sentence[index++];
+    /** Inserts a word into the trie. */
+    void insert(string word) {
+        TrieNode* node = root;
+        for(auto c : word){
+            if(!node->child[c-'a']){
+                node->child[c-'a'] = new TrieNode();
+            }
+            node = node->child[c-'a'];
         }
-        words.push_back(str);
-        index += 1;
-      }
+        node->is_word=true;
     }
+    
+    /** Returns if the word is in the trie. */
+    bool search(const string& word)const {
+        const TrieNode* node = find(word);
+        return node && node->is_word;
+    }
+    
+    /** Returns if there is any word in the trie that starts with the given prefix. */
+    bool startsWith(string prefix) {
+        return find(prefix);
+    }
+private:
+    struct TrieNode{
+      TrieNode()
+          :child(26,nullptr)
+          ,is_word(false)
+        {}
+        ~TrieNode()
+        {
+            for(auto e:child){
+                if(e){
+                    delete e;
+                }
+            }
+        }
+        vector<TrieNode*> child;
+        bool is_word;
+    };
+    const TrieNode* find(const string& prefix)const{
+        const TrieNode* node = root;
+        for(auto c : prefix){
+            node = node->child[c-'a'];
+            if(!node)
+                return nullptr;
+        }
+        return node;
+    }
+    TrieNode* root;
 };
-
 int main()
 {
-  Solution s;
-  vector<string> vs{"cat","bat","rat"};
-  string sentence = "the cattle was rattled by the battery";
-  cout << s.replaceWords(vs,sentence) << endl;
-  return 0;
+    Trie trie;
+
+    trie.insert("apple");
+    cout << trie.search("apple") << endl;   // returns true
+    cout << trie.search("app") << endl;     // returns false
+    cout << trie.startsWith("app") << endl; // returns true
+    trie.insert("app");
+    cout << trie.search("app") << endl; // returns true
+
+    return 0;
 }
+/**
+ * Your Trie object will be instantiated and called as such:
+ * Trie* obj = new Trie();
+ * obj->insert(word);
+ * bool param_2 = obj->search(word);
+ * bool param_3 = obj->startsWith(prefix);
+ */
