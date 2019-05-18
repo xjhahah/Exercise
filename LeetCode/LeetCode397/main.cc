@@ -72,7 +72,7 @@ int main()
   Solution s;
   int n;
   while(cin>>n){
-    s.integerReplacement(n);
+   cout<< s.integerReplacement(n) << endl;
   }
 	return 0;
 }
