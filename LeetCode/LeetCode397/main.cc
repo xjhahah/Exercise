@@ -19,6 +19,7 @@ using std::cin;
 using std::cout;
 using std::endl;
 
+/* 法一
 class Solution{
   public:
     int integerReplacement(int n){
@@ -44,6 +45,26 @@ class Solution{
         count++;
       }
       cout << count << endl;
+    }
+};
+*/
+
+//法二:效率比法一高
+class Solution {
+public:
+    int integerReplacement(int n) {
+        int temp=0,res=0;
+        while(n>1){
+            if(n&1){
+                temp++;
+            }
+            n>>=1;
+            if(!(n&1)){
+                temp>0?res++,temp>=2?n=n+1,temp=0:temp=0:temp=0;
+            }
+            res++;
+        }
+        return res+(temp>2?2:temp);
     }
 };
 int main()
