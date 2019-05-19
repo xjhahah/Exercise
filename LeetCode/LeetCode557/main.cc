@@ -17,7 +17,7 @@ using std::endl;
 class Solution{
   public:
     string reverseStr(string s, int k) {
-      size_t pos;
+      size_t pos=0;
       while(s.size()-pos >= (2*k)){
         reverse(s.begin(),s.begin()+pos+k);
         pos += (2*k);
@@ -38,8 +38,7 @@ int main()
   Solution s;
   string str;
   int k;
-  while(getline(cin,str)){
-    cin>>k;
+  while(cin>>str>>k){
     cout << s.reverseStr(str,k) << endl;
   }
   return 0;
