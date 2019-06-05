@@ -19,6 +19,47 @@ nums2 = [3, 4]
 
 using namespace std;
 
+
+//解法二
+class Solution {
+public:
+    double findMedianSortedArrays(vector<int>& A, vector<int>& B) {
+        const int m=A.size();
+        const int n=B.size();
+        
+        int total = n+m;
+        if(total & 0x1){
+            return find_kth(A.begin(),m,B.begin(),n,total/2+1);
+        }
+        else{
+            return (find_kth(A.begin(), m, B.begin(), n, total / 2) + find_kth(A.begin(), m, B.begin(), n, total / 2 + 1)) / 2.0;
+        }
+    }
+private:
+    static int find_kth(vector<int>::const_iterator A,int m,vector<int>::const_iterator B,int n,int k){
+        if(m>n){
+            return find_kth(B,n,A,m,k);
+        }
+        if(m==0){
+            return *(B+k-1);
+        }
+        if(k==1){
+            return min(*A,*B);
+        }
+        
+        int ia=min(k/2,m),ib=k-ia;
+        if(*(A+ia-1) < *(B+ib-1)){
+            return find_kth(A+ia,m-ia,B,n,k-ia);
+        }
+        else if(*(A+ia-1) > *(B+ib-1)){
+            return find_kth(A,m,B+ib,n-ib,k-ib);
+        }
+        else{
+            return A[ia-1];
+        }
+    }
+};
+
 class Solution {
 public:
 	double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
