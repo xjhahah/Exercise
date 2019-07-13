@@ -11,30 +11,29 @@ int main() {
   while (getline(cin, src)) {
     getline(cin, dst);
     bool flag = false;
-    auto it = src.begin();
 
-    while (it != src.end()) {
+    for(int i=0; i < src.length(); ++i) {
       string tmp;
-      if (*it == '"') {
-        it++;
-        while (it < src.end() && *it != '"') {
-          tmp += *it;
+      if (src[i] == '"') {
+        i++;
+        while (i < src.length() && src[i] != '"') {
+          tmp += src[i];
+          i++;
         }
         if (tmp == dst) {
           flag = true;
           break;
         }
-      } else if (*it != ',') {
-        while (it < src.end() && *it != ',') {
-          tmp += *it;
-          it++;
+      } else if (src[i] != ',') {
+        while (i < src.length() && src[i] != ',') {
+          tmp += src[i];
+          i++;
         }
         if (tmp == dst) {
           flag = true;
           break;
         }
       }
-      it++;
     }
     if (flag) {
       cout << "Ignore" << endl;
