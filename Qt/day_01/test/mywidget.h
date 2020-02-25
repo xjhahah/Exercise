@@ -8,7 +8,7 @@ using namespace std;
 
 class MyWidget : public QWidget
 {
-    Q_OBJECT
+    Q_OBJECT   //信号与槽的时候使用
 
 public:
     MyWidget(QWidget *parent = nullptr);
