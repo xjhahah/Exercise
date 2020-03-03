@@ -7,11 +7,18 @@ ServerWidget::ServerWidget(QWidget *parent)
 {
     ui->setupUi(this);
 
+    tcpServer = nullptr;
+    tcpSocket = nullptr;
+
+
     //设置监听套接字，指定父对象，使其自动回收空间
     tcpServer = new QTcpServer(this);
 
     //listen,指定端口号和任意IP
     tcpServer->listen(QHostAddress::Any,8080);
+
+    //设定标题
+    setWindowTitle("服务器：8080");
 
     //TODO
     connect(tcpServer,&QTcpServer::newConnection,
@@ -28,8 +35,20 @@ ServerWidget::ServerWidget(QWidget *parent)
 
         //将获取到的信息打印到屏幕
         ui->ReadButton->setText(tmp);
+
+
+        //TODO
+        connect(tcpSocket,&QTcpSocket::readyRead,
+                [=](){
+            //从通信套接字中取数据
+            QByteArray array = tcpSocket->readAll();
+            ui->ReadButton->append(array);
+
+        }
+        );
     }
     );
+
 
 }
 
@@ -41,6 +60,10 @@ ServerWidget::~ServerWidget()
 
 void ServerWidget::on_SendButton_clicked()
 {
+    if(nullptr == tcpSocket){
+        return;
+    }
+
     //获取编辑区内容
     QString str = ui->WriteButton->toPlainText();
 
@@ -48,4 +71,15 @@ void ServerWidget::on_SendButton_clicked()
     //
     tcpSocket->write(str.toUtf8().data());
 
+}
+
+void ServerWidget::on_CloseButton_clicked()
+{
+    if(nullptr == tcpSocket){
+        return;
+    }
+    //主动和客户端断开连接
+    tcpSocket->disconnectFromHost();
+    tcpSocket->close();
+    tcpSocket = nullptr;
 }
