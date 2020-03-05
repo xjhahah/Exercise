@@ -1,6 +1,12 @@
 #include "serverwidget.h"
 #include "ui_serverwidget.h"
 
+#include <QDebug>
+#include <QString>
+#include <QFileDialog> //文件对话框头文件
+
+#define cout qDebug() << "[" << __FILE__ << __LINE__ << "]"
+
 ServerWidget::ServerWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::ServerWidget)
@@ -54,3 +60,41 @@ ServerWidget::~ServerWidget()
     delete ui;
 }
 
+
+//选择文件的按钮
+void ServerWidget::on_ButtonFile_clicked()
+{
+    QString filePath = QFileDialog::getOpenFileName(this,"open","../");
+
+    //判断打开是否成功
+    if(false == filePath.isEmpty()){
+        fileName.clear();
+        fileSize = 0;
+        //获取文件信息
+        QFileInfo info(filePath);
+        fileName = info.fileName(); //获取文件名称
+        fileSize = info.size();     //获取文件大小
+
+        sendSize = 0;
+        //只读方式打开文件，指定文件的名字
+        file.setFileName(filePath);
+
+        //打开文件
+        bool flag = file.open(QIODevice::ReadOnly);
+        if(flag == false){
+            cout << "文件打开失败！！！";
+        }
+        else{
+            //提示打开文件路径
+            ui->FiletextEdit->append(filePath);
+            ui->ButtonFile->setEnabled(false);
+            ui->ButtonSend->setEnabled(true);
+        }
+
+        //只读方式打开
+
+    }
+    else{
+        cout << "文件路径出错...";
+    }
+}
