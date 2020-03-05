@@ -1,9 +1,6 @@
 #include "serverwidget.h"
 #include "ui_serverwidget.h"
 
-#include <QDebug>
-#include <QString>
-#include <QFileDialog> //文件对话框头文件
 
 #define cout qDebug() << "[" << __FILE__ << __LINE__ << "]"
 
@@ -51,7 +48,14 @@ ServerWidget::ServerWidget(QWidget *parent)
     }
     );
 
+    connect(&time,&QTimer::timeout,
+            [=](){
+        time.stop();
 
+        //调用发送文件函数
+        SendData();
+    }
+    );
 
 }
 
@@ -96,5 +100,58 @@ void ServerWidget::on_ButtonFile_clicked()
     }
     else{
         cout << "文件路径出错...";
+    }
+}
+
+
+//发送文件按钮
+void ServerWidget::on_ButtonSend_clicked()
+{
+    //先发送头部信息   文件名#文件大小
+    QString head = QString("%1##%1").arg(fileName).arg(fileSize);
+
+    //发送头部信息
+    auto len = tcpSocket->write(head.toUtf8());
+
+    if(len < 0){
+        cout << "文件发送失败...";
+        file.close();
+
+        ui->ButtonFile->setEnabled(true);
+        ui->ButtonSend->setEnabled(false);
+    }else{  //头部信息发送成功
+        //发送真正的信息，防止TCP粘包，设置定时器
+        time.start(20);  //延迟20ms
+    }
+}
+
+
+void ServerWidget::SendData(){
+    auto len = 0;
+    do{
+        //每次发送数据的大小
+        char buf[1024*4] = {0};
+        len = 0;
+
+        //向文件中写内容
+        len = file.read(buf,sizeof(buf));
+
+        //读多少写多少
+        len = tcpSocket->write(buf,len);
+
+        //将发送的数据进行累加
+        sendSize += len;
+
+    }while(len);
+
+    //文件发送完毕
+    if(sendSize == fileSize){
+        ui->FiletextEdit->append("文件发送完成!");
+        file.close();
+
+        //断开客户端
+        tcpSocket->disconnectFromHost();
+        tcpSocket->close();
+
     }
 }

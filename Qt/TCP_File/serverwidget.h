@@ -4,9 +4,12 @@
 #include <QWidget>
 
 #include <QFile>
+#include <QDebug>
+#include <QString>
 
 #include <QFileInfo> //获取文件信息
-
+#include <QFileDialog> //文件对话框头文件
+#include <QTimer>  //定时器
 
 #include <QTcpServer>
 #include <QTcpSocket>
@@ -26,8 +29,12 @@ public:
     ServerWidget(QWidget *parent = nullptr);
     ~ServerWidget();
 
+    void SendData();
+
 private slots:
     void on_ButtonFile_clicked();
+
+    void on_ButtonSend_clicked();
 
 private:
     Ui::ServerWidget *ui;
@@ -37,5 +44,6 @@ private:
     QString      fileName; //文件名
     qint64       fileSize; //文件大小
     qint64       sendSize; //发送文件的大小
+    QTimer       time;
 };
 #endif // SERVERWIDGET_H
