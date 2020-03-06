@@ -8,6 +8,7 @@
 
 #include <QTcpSocket>
 #include <QTcpServer>
+#include <QFileInfo>
 
 #include <QMessageBox>
 
